@@ -20,7 +20,7 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
-            html.H1("Sentiment Analysis", className="text-center mb-4"),
+            html.H1("Psyche, Sentiment Analysis", className="text-center mb-4"),
             html.Hr(),
         ], width=12)
     ]),
