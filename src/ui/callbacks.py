@@ -1,19 +1,22 @@
 """
 Callbacks module for Dash app interactivity.
 """
-from dash import html, Input, Output, State
-from sentiment import analyze_sentiment
+
+from dash import Input, Output, State, html
+
+from api.sentiment import analyze_sentiment
 
 
 def register_callbacks(app):
     """
     Register all callbacks with the Dash app.
     """
+
     @app.callback(
         Output("result-output", "children"),
         Input("analyze-button", "n_clicks"),
         State("text-input", "value"),
-        prevent_initial_call=True
+        prevent_initial_call=True,
     )
     def update_sentiment(n_clicks, text):
         """
@@ -21,12 +24,11 @@ def register_callbacks(app):
         """
         if not text or text.strip() == "":
             return html.Div(
-                "Please enter some text to analyze.",
-                style={"color": "#6c757d"}
+                "Please enter some text to analyze.", style={"color": "#6c757d"}
             )
-        
+
         sentiment = analyze_sentiment(text)
-        
+
         # Color coding based on sentiment
         if sentiment == "Positive":
             color = "#28a745"  # Green
@@ -37,8 +39,15 @@ def register_callbacks(app):
         else:
             color = "#ffc107"  # Yellow
             emoji = "😐"
-        
-        return html.Div([
-            html.H4(f"Sentiment: {sentiment} {emoji}", style={"color": color, "marginBottom": "10px"}),
-            html.P(f"You entered: \"{text}\"", style={"color": "#6c757d", "fontSize": 14})
-        ])
+
+        return html.Div(
+            [
+                html.H4(
+                    f"Sentiment: {sentiment} {emoji}",
+                    style={"color": color, "marginBottom": "10px"},
+                ),
+                html.P(
+                    f'You entered: "{text}"', style={"color": "#6c757d", "fontSize": 14}
+                ),
+            ]
+        )
