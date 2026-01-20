@@ -8,9 +8,6 @@ import dash_bootstrap_components as dbc
 def create_layout():
     """
     Create and return the app layout.
-    
-    Returns:
-        dash_bootstrap_components.Container: The main app layout
     """
     return dbc.Container([
         dbc.Row([
