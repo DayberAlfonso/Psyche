@@ -26,13 +26,13 @@ def register_callbacks(app):
                 "Please enter some text to analyze.", style={"color": "#6c757d"}
             )
 
-        sentiment = analyze_sentiment(text)
+        sentiment_label, polarity_score = analyze_sentiment(text)
 
         # Color coding based on sentiment
-        if sentiment == "Positive":
+        if sentiment_label == "Positive":
             color = "#28a745"  # Green
             emoji = "😊"
-        elif sentiment == "Negative":
+        elif sentiment_label == "Negative":
             color = "#dc3545"  # Red
             emoji = "😞"
         else:
@@ -42,7 +42,7 @@ def register_callbacks(app):
         return html.Div(
             [
                 html.H4(
-                    f"Sentiment: {sentiment} {emoji}",
+                    f"Sentiment: {sentiment_label} {emoji} ({polarity_score:.3f})",
                     style={"color": color, "marginBottom": "10px"},
                 ),
                 html.P(
