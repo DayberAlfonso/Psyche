@@ -2,7 +2,7 @@
 Callbacks module for Dash app interactivity.
 """
 
-from dash import Input, Output, State, html, callback_context
+from dash import Input, Output, html
 
 from api.sentiment import analyze_sentiment
 
@@ -14,26 +14,13 @@ def register_callbacks(app):
 
     @app.callback(
         Output("result-output", "children"),
-        [Input("analyze-button", "n_clicks"),
-         Input("text-input", "value")],
-        State("real-time-toggle", "value"),
+        Input("text-input", "value"),
         prevent_initial_call=True,
     )
-    def update_sentiment(n_clicks, text, real_time):
+    def update_sentiment(text):
         """
-        Update the sentiment analysis result when the button is clicked or 
-        when real-time analysis is enabled and text changes.
+        Update the sentiment analysis result in real-time as text changes.
         """
-        ctx = callback_context
-        triggered_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
-        
-        # Only analyze on button click OR if real-time is enabled and text changed
-        if triggered_id == "text-input" and not real_time:
-            return html.Div(
-                "Your sentiment analysis will appear here...",
-                style={"color": "#6c757d"}
-            )
-        
         if not text or text.strip() == "":
             return html.Div(
                 "Please enter some text to analyze.", style={"color": "#6c757d"}

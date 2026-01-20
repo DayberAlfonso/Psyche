@@ -30,26 +30,6 @@ def create_layout():
                     style={"width": "100%", "height": 200, "fontSize": 16},
                     className="mb-3"
                 ),
-                dbc.Row([
-                    dbc.Col([
-                        dbc.Button(
-                            "Analyze Sentiment",
-                            id="analyze-button",
-                            color="primary",
-                            className="mb-3 w-100",
-                            n_clicks=0,
-                            size="lg"
-                        ),
-                    ], width=12, md=6),
-                    dbc.Col([
-                        dbc.Switch(
-                            id="real-time-toggle",
-                            label="Real-time analysis",
-                            value=False,
-                            className="mb-3 mt-2"
-                        ),
-                    ], width=12, md=6)
-                ]),
             ], width=12, md=6),
             
             dbc.Col([
