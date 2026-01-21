@@ -45,5 +45,14 @@ def create_layout():
                     className="mb-3"
                 ),
             ], width=12, md=6)
-        ])
-    ], fluid=True, className="p-4")
+        ]),
+        
+        dbc.Row([
+            dbc.Col([
+                dcc.Graph(
+                    id="sentiment-chart",
+                    style={"height": 300}
+                ),
+            ], width=12)
+        ], className="mt-3")
+    ], fluid=True, className="p-4", style={"minHeight": "100vh", "overflowY": "auto"})
