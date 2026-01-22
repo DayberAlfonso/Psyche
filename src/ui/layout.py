@@ -30,7 +30,16 @@ def create_layout():
             ], width=12, md=6),
             
             dbc.Col([
-                html.Label("Result:", className="mb-2"),
+                html.Div([
+                    html.Label("Result:", className="mb-2"),
+                    dbc.Button(
+                        "Copy to Clipboard",
+                        id="copy-button",
+                        color="secondary",
+                        size="sm",
+                        className="ms-2 mb-2"
+                    ),
+                ], style={"display": "flex", "alignItems": "flex-end"}),
                 html.Div(
                     id="result-output",
                     children="Your sentiment analysis will appear here...",
@@ -44,6 +53,8 @@ def create_layout():
                     },
                     className="mb-3"
                 ),
+                html.Div(id="result-text", style={"display": "none"}),
+                html.Div(id="copy-status", className="mt-2", style={"fontSize": 12, "color": "#28a745", "fontWeight": "bold"}),
             ], width=12, md=6)
         ]),
         

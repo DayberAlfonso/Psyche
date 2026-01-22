@@ -3,7 +3,7 @@ Callbacks module for Dash app interactivity.
 """
 
 import plotly.graph_objects as go
-from dash import Input, Output, html
+from dash import Input, Output, html, State, clientside_callback
 
 from api.sentiment import analyze_sentiment
 
@@ -14,7 +14,7 @@ def register_callbacks(app):
     """
 
     @app.callback(
-        [Output("result-output", "children"), Output("sentiment-chart", "figure")],
+        [Output("result-output", "children"), Output("sentiment-chart", "figure"), Output("result-text", "children")],
         Input("text-input", "value"),
         prevent_initial_call=True,
     )
@@ -39,7 +39,8 @@ def register_callbacks(app):
                 html.Div(
                     "Please enter some text to analyze.", style={"color": "#6c757d"}
                 ),
-                empty_fig
+                empty_fig,
+                ""
             )
 
         sentiment_label, polarity_score = analyze_sentiment(text)
@@ -84,6 +85,8 @@ def register_callbacks(app):
             font=dict(size=14)
         )
 
+        result_text = f"Sentiment: {sentiment_label} {emoji} ({polarity_score:.3f})\nText: {text}"
+        
         return (
             html.Div(
                 [
@@ -96,5 +99,27 @@ def register_callbacks(app):
                     ),
                 ]
             ),
-            fig
+            fig,
+            result_text
         )
+    
+    # Client-side callback for clipboard copy
+    clientside_callback(
+        """
+        function(n_clicks, text_to_copy) {
+            if (n_clicks && text_to_copy) {
+                navigator.clipboard.writeText(text_to_copy).then(function() {
+                    return "✓ Copied to clipboard!";
+                }).catch(function(err) {
+                    return "Failed to copy";
+                });
+                return "✓ Copied to clipboard!";
+            }
+            return "";
+        }
+        """,
+        Output("copy-status", "children"),
+        Input("copy-button", "n_clicks"),
+        State("result-text", "children"),
+        prevent_initial_call=True,
+    )
