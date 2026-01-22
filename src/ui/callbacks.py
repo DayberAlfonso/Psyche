@@ -25,19 +25,28 @@ def register_callbacks(app):
         if not text or text.strip() == "":
             empty_fig = go.Figure()
             empty_fig.add_annotation(
-                text="Enter text to see sentiment visualization",
+                text=">>> ENTER TEXT TO SEE SENTIMENT VISUALIZATION",
                 xref="paper", yref="paper",
                 x=0.5, y=0.5, showarrow=False,
-                font=dict(size=16, color="#6c757d")
+                font=dict(size=14, color="#00ffff", family="Courier New")
             )
             empty_fig.update_layout(
                 xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
                 yaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
                 plot_bgcolor="white"
             )
+            empty_fig.update_layout(
+                plot_bgcolor="#000000",
+                paper_bgcolor="#000000"
+            )
             return (
                 html.Div(
-                    "Please enter some text to analyze.", style={"color": "#6c757d"}
+                    ">>> PLEASE ENTER SOME TEXT TO ANALYZE...", 
+                    style={
+                        "color": "#00ffff",
+                        "fontFamily": "'Courier New', monospace",
+                        "textShadow": "0 0 5px #00ffff"
+                    }
                 ),
                 empty_fig,
                 ""
@@ -45,44 +54,53 @@ def register_callbacks(app):
 
         sentiment_label, polarity_score = analyze_sentiment(text)
 
-        # Color coding based on sentiment
+        # Color coding based on sentiment (retro neon colors)
         if sentiment_label == "Positive":
-            color = "#28a745"  # Green
+            color = "#00ff00"  # Neon Green
             emoji = "😊"
+            glow_color = "#00ff00"
         elif sentiment_label == "Negative":
-            color = "#dc3545"  # Red
+            color = "#ff0080"  # Hot Pink
             emoji = "😞"
+            glow_color = "#ff0080"
         else:
-            color = "#ffc107"  # Yellow
+            color = "#ffff00"  # Neon Yellow
             emoji = "😐"
+            glow_color = "#ffff00"
 
-        # Create gauge chart
+        # Create gauge chart with retro styling
         fig = go.Figure(go.Indicator(
             mode = "gauge+number+delta",
             value = polarity_score,
             domain = {'x': [0, 1], 'y': [0, 1]},
-            delta = {'reference': 0},
+            delta = {
+                'reference': 0,
+                'font': {'color': '#00ffff', 'family': 'Orbitron'}
+            },
             gauge = {
-                'axis': {'range': [-1, 1]},
+                'axis': {'range': [-1, 1], 'tickcolor': '#00ffff', 'tickwidth': 2},
                 'bar': {'color': color},
+                'bgcolor': "#000000",
                 'steps': [
-                    {'range': [-1, -0.33], 'color': "#f8f9fa"},
-                    {'range': [-0.33, 0.33], 'color': "#fff3cd"},
-                    {'range': [0.33, 1], 'color': "#d4edda"}
+                    {'range': [-1, -0.33], 'color': "#330000"},
+                    {'range': [-0.33, 0.33], 'color': "#333300"},
+                    {'range': [0.33, 1], 'color': "#003300"}
                 ],
                 'threshold': {
-                    'line': {'color': "red", 'width': 4},
+                    'line': {'color': "#00ffff", 'width': 4},
                     'thickness': 0.75,
                     'value': 0
                 }
-            }
+            },
+            number = {'font': {'color': color, 'size': 20, 'family': 'Orbitron'}}
         ))
 
         fig.update_layout(
             height=300,
             margin=dict(l=20, r=20, t=10, b=20),
-            paper_bgcolor="white",
-            font=dict(size=14)
+            paper_bgcolor="#000000",
+            font=dict(size=14, color="#00ffff", family="Orbitron"),
+            plot_bgcolor="#000000"
         )
 
         result_text = f"Sentiment: {sentiment_label} {emoji} ({polarity_score:.3f})\nText: {text}"
@@ -91,11 +109,23 @@ def register_callbacks(app):
             html.Div(
                 [
                     html.H4(
-                        f"Sentiment: {sentiment_label} {emoji} ({polarity_score:.3f})",
-                        style={"color": color, "marginBottom": "10px"},
+                        f">>> SENTIMENT: {sentiment_label} {emoji} ({polarity_score:.3f})",
+                        style={
+                            "color": color,
+                            "marginBottom": "10px",
+                            "fontFamily": "'Courier New', monospace",
+                            "textShadow": f"0 0 10px {glow_color}",
+                            "fontWeight": "bold"
+                        },
                     ),
                     html.P(
-                        f'You entered: "{text}"', style={"color": "#6c757d", "fontSize": 14}
+                        f'>>> TEXT: "{text}"', 
+                        style={
+                            "color": "#00ffff",
+                            "fontSize": 14,
+                            "fontFamily": "'Courier New', monospace",
+                            "textShadow": "0 0 5px #00ffff"
+                        }
                     ),
                 ]
             ),
